@@ -4,7 +4,19 @@ const updatePlugin = require('store/plugins/update');
 
 store.addPlugin(updatePlugin);
 
-const storeKey = 'gatsby-trackers';
+const storeKey = 'gatsby:trackers';
+
+function registerTracker({ id, label }) {
+  if (!getTracker(id)) {
+    store.update(
+      storeKey,
+      {},
+      (obj) => {
+        obj[id] = { label, enabled: false }
+      }
+    );
+  }
+}
 
 function updateTracker(id, enabled) {
   store.update(
@@ -18,16 +30,12 @@ function updateTracker(id, enabled) {
   );
 }
 
-function registerTracker({ id, label }) {
-  if (!getTracker(id)) {
-    store.update(
-      storeKey,
-      {},
-      (obj) => {
-        obj[id] = { label, enabled: false }
-      }
-    );
+function updateTrackers(enabled) {
+  const trackers = getTrackers();
+  if (!trackers) {
+    return;
   }
+  Object.keys(trackers).forEach(id => updateTracker(id, enabled));
 }
 
 function getTrackers() {
@@ -43,8 +51,16 @@ function enableTracker(id) {
   updateTracker(id, true);
 }
 
+function enableTrackers() {
+  updateTrackers(true);
+}
+
 function disableTracker(id) {
   updateTracker(id, false);
+}
+
+function disableTrackers() {
+  updateTrackers(false);
 }
 
 module.exports = {
@@ -52,5 +68,7 @@ module.exports = {
   getTrackers,
   getTracker,
   enableTracker,
+  enableTrackers,
   disableTracker,
+  disableTrackers,
 };
