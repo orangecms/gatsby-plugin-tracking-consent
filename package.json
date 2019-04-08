@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/orangecms/gatsby-plugin-tracking-consent#readme",
   "dependencies": {
-    "prop-types": "^15.7.2",
     "store": "^2.0.12"
   },
   "devDependencies": {
